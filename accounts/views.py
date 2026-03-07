@@ -31,13 +31,25 @@ def register(request):
 
 @csrf_exempt
 def chatbot_response(request):
+
     if request.method == "POST":
-        data = json.loads(request.body)
-        message = data.get("message")
 
-        # temporary response
-        reply = f"You said: {message}"
+        try:
+            data = json.loads(request.body)
+            message = data.get("message")
 
-        return JsonResponse({"response": reply})
-    
+            if not message:
+                return JsonResponse({"error": "Message is required"}, status=400)
+
+            result = analyze_message(message)
+
+            return JsonResponse({
+                "response": result["response"],
+                "emotion": result["emotion"],
+                "is_safety_alert": result["is_safety_alert"]
+            })
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
     return JsonResponse({"error": "Invalid request"}, status=400)
