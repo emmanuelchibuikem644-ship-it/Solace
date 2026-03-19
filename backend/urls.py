@@ -24,5 +24,5 @@ urlpatterns = [
     # Auth routes
     path("api/auth/", include("accounts.urls")),  # register lives here
     path("api/auth/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-     path("api/chat/", include("accounts.urls")),
+    
 ]
